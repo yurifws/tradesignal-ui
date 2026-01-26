@@ -8,123 +8,91 @@ export default function Home() {
   const { isConnected } = useAccount();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-dark-900 to-dark-800">
+    <div className="min-h-screen bg-dark-900">
       {/* Navbar */}
-      <nav className="border-b border-dark-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-primary-500">
-                Trade Signal
-              </h1>
-            </div>
-            <ConnectButton />
-          </div>
+      <nav className="border-b border-gray-800">
+        <div className="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
+          <Link href="/" className="text-lg font-semibold text-white">
+            Trade Signal
+          </Link>
+          <ConnectButton />
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center">
-          <h1 className="text-5xl font-bold text-white mb-6">
-            Decentralized Trading Signals
-          </h1>
-          <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-            Buy and sell trading signals on Ethereum. Build your reputation as a
-            trader and earn from your market insights.
-          </p>
+      {/* Hero */}
+      <div className="max-w-4xl mx-auto px-4 py-24 text-center">
+        <h1 className="text-5xl font-bold text-white mb-4">Trade Signal</h1>
+        <p className="text-lg text-gray-400 mb-8 max-w-xl mx-auto">
+          Decentralized marketplace for trading signals on Ethereum
+        </p>
 
-          {!isConnected && (
-            <div className="flex justify-center">
-              <ConnectButton />
-            </div>
-          )}
-        </div>
+        {!isConnected ? (
+          <ConnectButton />
+        ) : (
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-lg border border-gray-700">
+            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            <span className="text-sm text-gray-300">Connected</span>
+          </div>
+        )}
+      </div>
 
-        {/* Feature Cards */}
-        {isConnected && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
-            {/* Create Signal Card */}
+      {/* Cards */}
+      {isConnected && (
+        <div className="max-w-4xl mx-auto px-4 pb-20">
+          <div className="grid md:grid-cols-3 gap-4">
             <Link href="/create">
-              <div className="bg-dark-800 border border-dark-700 rounded-lg p-6 hover:border-primary-500 transition-colors cursor-pointer">
-                <div className="text-4xl mb-4">📝</div>
-                <h3 className="text-xl font-semibold text-white mb-2">
+              <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-gray-700 transition-colors">
+                <h3 className="text-base font-semibold text-white mb-2">
                   Create Signal
                 </h3>
-                <p className="text-gray-400">
-                  Share your market insights and earn from successful
-                  predictions
-                </p>
+                <p className="text-sm text-gray-400">Share market insights</p>
               </div>
             </Link>
 
-            {/* Browse Signals Card */}
             <Link href="/browse">
-              <div className="bg-dark-800 border border-dark-700 rounded-lg p-6 hover:border-primary-500 transition-colors cursor-pointer">
-                <div className="text-4xl mb-4">🔍</div>
-                <h3 className="text-xl font-semibold text-white mb-2">
+              <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-gray-700 transition-colors">
+                <h3 className="text-base font-semibold text-white mb-2">
                   Browse Signals
                 </h3>
-                <p className="text-gray-400">
-                  Discover trading signals from verified traders
-                </p>
+                <p className="text-sm text-gray-400">Discover signals</p>
               </div>
             </Link>
 
-            {/* My Signals Card */}
             <Link href="/my-signals">
-              <div className="bg-dark-800 border border-dark-700 rounded-lg p-6 hover:border-primary-500 transition-colors cursor-pointer">
-                <div className="text-4xl mb-4">📊</div>
-                <h3 className="text-xl font-semibold text-white mb-2">
+              <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-gray-700 transition-colors">
+                <h3 className="text-base font-semibold text-white mb-2">
                   My Signals
                 </h3>
-                <p className="text-gray-400">
-                  View your created signals and track performance
-                </p>
+                <p className="text-sm text-gray-400">View created signals</p>
+              </div>
+            </Link>
+
+            <Link href="/purchased">
+              <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-gray-700 transition-colors">
+                <h3 className="text-base font-semibold text-white mb-2">
+                  Purchased
+                </h3>
+                <p className="text-sm text-gray-400">View purchased signals</p>
               </div>
             </Link>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* How it Works */}
-        <div className="mt-24">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">
-            How It Works
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-primary-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold">
-                1
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">
-                Create Signal
-              </h3>
-              <p className="text-gray-400">
-                Predict price movements and set your analysis fee
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="bg-primary-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold">
-                2
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">
-                Users Buy Access
-              </h3>
-              <p className="text-gray-400">
-                Traders purchase your signal to view full analysis
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="bg-primary-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold">
-                3
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">
-                Build Reputation
-              </h3>
-              <p className="text-gray-400">
-                Accurate predictions increase your trader reputation
-              </p>
-            </div>
+      {/* Footer */}
+      <div className="max-w-4xl mx-auto px-4 py-12 border-t border-gray-800">
+        <div className="grid md:grid-cols-3 gap-8 text-center text-sm">
+          <div>
+            <div className="text-2xl font-bold text-white mb-1">100%</div>
+            <div className="text-gray-400">Decentralized</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-white mb-1">5%</div>
+            <div className="text-gray-400">Protocol Fee</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-white mb-1">∞</div>
+            <div className="text-gray-400">Earning Potential</div>
           </div>
         </div>
       </div>

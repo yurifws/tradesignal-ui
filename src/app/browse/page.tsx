@@ -17,7 +17,6 @@ export default function BrowseSignals() {
     hash,
   });
 
-  // Get total number of signals
   const { data: nextSignalId } = useReadContract({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
@@ -46,13 +45,19 @@ export default function BrowseSignals() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-dark-900 flex items-center justify-center p-4">
+        <div className="text-center max-w-md">
           <h2 className="text-2xl font-bold text-white mb-4">
-            Please connect your wallet to browse signals
+            Wallet Required
           </h2>
-          <Link href="/" className="text-primary-500 hover:text-primary-400">
-            Go back home
+          <p className="text-gray-400 mb-6">
+            Connect your wallet to browse signals
+          </p>
+          <Link
+            href="/"
+            className="inline-block px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
+          >
+            Go Back
           </Link>
         </div>
       </div>
@@ -61,18 +66,17 @@ export default function BrowseSignals() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-6xl mb-4">✅</div>
+      <div className="min-h-screen bg-dark-900 flex items-center justify-center p-4">
+        <div className="text-center max-w-md">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Signal Purchased Successfully!
+            Signal Purchased
           </h2>
-          <p className="text-gray-400 mb-6">
-            You can now view the full analysis
+          <p className="text-gray-400 mb-8">
+            You now have access to the analysis
           </p>
           <Link
             href="/my-signals"
-            className="inline-block bg-primary-500 text-white px-6 py-3 rounded-lg hover:bg-primary-600"
+            className="inline-block px-6 py-2 bg-white text-black rounded-lg hover:bg-gray-200"
           >
             View My Signals
           </Link>
@@ -86,37 +90,32 @@ export default function BrowseSignals() {
   return (
     <div className="min-h-screen bg-dark-900">
       {/* Navbar */}
-      <nav className="border-b border-dark-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="text-2xl font-bold text-primary-500">
-              Trade Signal
-            </Link>
-            <div className="text-gray-400">
-              {address?.slice(0, 6)}...{address?.slice(-4)}
-            </div>
+      <nav className="border-b border-gray-800">
+        <div className="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
+          <Link href="/" className="text-lg font-semibold text-white">
+            Trade Signal
+          </Link>
+          <div className="text-sm text-gray-400">
+            {address?.slice(0, 6)}...{address?.slice(-4)}
           </div>
         </div>
       </nav>
 
-      {/* Signals List */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-white mb-8">
-          Browse Trading Signals
-        </h1>
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <h1 className="text-3xl font-bold text-white mb-8">Browse Signals</h1>
 
         {totalSignals === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-400 text-lg mb-4">No signals created yet</p>
+          <div className="text-center py-20">
+            <p className="text-gray-400 mb-6">No signals available</p>
             <Link
               href="/create"
-              className="inline-block bg-primary-500 text-white px-6 py-3 rounded-lg hover:bg-primary-600"
+              className="inline-block px-6 py-2 bg-white text-black rounded-lg hover:bg-gray-200"
             >
               Create First Signal
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-4">
             {Array.from({ length: totalSignals }, (_, i) => (
               <SignalCard
                 key={i}
@@ -141,14 +140,26 @@ function SignalCard({
   onBuy: (id: number, fee: bigint) => void;
   isPending: boolean;
 }) {
-  const { data: signal } = useReadContract({
+  const { data: signal, isLoading } = useReadContract({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: "signals",
     args: [BigInt(signalId)],
   });
 
-  if (!signal || signal[2] !== 0) return null; // Skip if not active (status !== 0)
+  if (isLoading) {
+    return (
+      <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+        <div className="animate-pulse space-y-3">
+          <div className="h-4 bg-gray-800 rounded w-3/4"></div>
+          <div className="h-4 bg-gray-800 rounded w-1/2"></div>
+          <div className="h-4 bg-gray-800 rounded w-full"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!signal || signal[2] !== 0) return null;
 
   const [
     trader,
@@ -163,54 +174,44 @@ function SignalCard({
   ] = signal;
 
   return (
-    <div className="bg-dark-800 border border-dark-700 rounded-lg p-6 hover:border-primary-500 transition-colors">
+    <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-gray-700 transition-colors">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h3 className="text-xl font-bold text-white">{asset}</h3>
-          <p className="text-sm text-gray-400">Signal #{signalId}</p>
+          <h3 className="text-lg font-bold text-white">{asset}</h3>
+          <p className="text-sm text-gray-500">#{signalId}</p>
         </div>
         <span
-          className={`px-3 py-1 rounded-full text-sm font-semibold ${
+          className={`px-2 py-1 rounded text-xs font-semibold ${
             direction === 0
               ? "bg-green-600 text-white"
               : "bg-red-600 text-white"
           }`}
         >
-          {direction === 0 ? "📈 Bullish" : "📉 Bearish"}
+          {direction === 0 ? "Bullish" : "Bearish"}
         </span>
       </div>
 
-      <div className="space-y-2 mb-4">
+      <div className="space-y-2 text-sm mb-4">
         <div className="flex justify-between">
-          <span className="text-gray-400">Target Price:</span>
-          <span className="text-white font-semibold">
-            ${targetPrice.toString()}
-          </span>
+          <span className="text-gray-400">Target</span>
+          <span className="text-white">${targetPrice.toString()}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-400">Deadline:</span>
+          <span className="text-gray-400">Deadline</span>
           <span className="text-white">
             {new Date(Number(deadline) * 1000).toLocaleDateString()}
           </span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-400">Fee:</span>
-          <span className="text-white font-semibold">
-            {formatEther(fee)} ETH
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-400">Trader:</span>
-          <span className="text-white text-sm">
-            {trader.slice(0, 6)}...{trader.slice(-4)}
-          </span>
+          <span className="text-gray-400">Fee</span>
+          <span className="text-white">{formatEther(fee)} ETH</span>
         </div>
       </div>
 
       <button
         onClick={() => onBuy(signalId, fee)}
         disabled={isPending}
-        className="w-full bg-primary-500 text-white py-3 rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full bg-white text-black py-2 rounded-lg font-semibold hover:bg-gray-200 disabled:opacity-50 text-sm"
       >
         {isPending ? "Processing..." : "Buy Signal"}
       </button>

@@ -17,11 +17,10 @@ export default function CreateSignal() {
     hash,
   });
 
-  // Form state
   const [asset, setAsset] = useState("ETH");
   const [targetPrice, setTargetPrice] = useState("");
   const [deadline, setDeadline] = useState("");
-  const [direction, setDirection] = useState(0); // 0 = Bullish, 1 = Bearish
+  const [direction, setDirection] = useState(0);
   const [fee, setFee] = useState("");
   const [analysis, setAnalysis] = useState("");
 
@@ -34,7 +33,6 @@ export default function CreateSignal() {
     }
 
     try {
-      // Convert deadline to Unix timestamp
       const deadlineTimestamp = Math.floor(new Date(deadline).getTime() / 1000);
 
       writeContract({
@@ -49,7 +47,7 @@ export default function CreateSignal() {
           parseEther(fee),
           analysis,
         ],
-        value: parseEther("0.001"), // Listing fee
+        value: parseEther("0.001"),
       });
     } catch (error) {
       console.error("Error creating signal:", error);
@@ -59,13 +57,19 @@ export default function CreateSignal() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-dark-900 flex items-center justify-center p-4">
+        <div className="text-center max-w-md">
           <h2 className="text-2xl font-bold text-white mb-4">
-            Please connect your wallet to create signals
+            Wallet Required
           </h2>
-          <Link href="/" className="text-primary-500 hover:text-primary-400">
-            Go back home
+          <p className="text-gray-400 mb-6">
+            Connect your wallet to create signals
+          </p>
+          <Link
+            href="/"
+            className="inline-block px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
+          >
+            Go Back
           </Link>
         </div>
       </div>
@@ -74,25 +78,23 @@ export default function CreateSignal() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-6xl mb-4">✅</div>
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Signal Created Successfully!
-          </h2>
-          <p className="text-gray-400 mb-6">
-            Transaction hash: {hash?.slice(0, 10)}...{hash?.slice(-8)}
+      <div className="min-h-screen bg-dark-900 flex items-center justify-center p-4">
+        <div className="text-center max-w-md">
+          <h2 className="text-3xl font-bold text-white mb-4">Signal Created</h2>
+          <p className="text-gray-400 mb-2">Transaction successful</p>
+          <p className="text-sm text-gray-500 mb-8 font-mono">
+            {hash?.slice(0, 10)}...{hash?.slice(-8)}
           </p>
-          <div className="space-x-4">
+          <div className="flex gap-4 justify-center">
             <Link
               href="/browse"
-              className="inline-block bg-primary-500 text-white px-6 py-3 rounded-lg hover:bg-primary-600"
+              className="px-6 py-2 bg-white text-black rounded-lg hover:bg-gray-200"
             >
               Browse Signals
             </Link>
             <Link
               href="/my-signals"
-              className="inline-block bg-dark-700 text-white px-6 py-3 rounded-lg hover:bg-dark-600"
+              className="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
             >
               My Signals
             </Link>
@@ -105,24 +107,19 @@ export default function CreateSignal() {
   return (
     <div className="min-h-screen bg-dark-900">
       {/* Navbar */}
-      <nav className="border-b border-dark-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="text-2xl font-bold text-primary-500">
-              Trade Signal
-            </Link>
-            <div className="text-gray-400">
-              {address?.slice(0, 6)}...{address?.slice(-4)}
-            </div>
+      <nav className="border-b border-gray-800">
+        <div className="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
+          <Link href="/" className="text-lg font-semibold text-white">
+            Trade Signal
+          </Link>
+          <div className="text-sm text-gray-400">
+            {address?.slice(0, 6)}...{address?.slice(-4)}
           </div>
         </div>
       </nav>
 
-      {/* Form */}
       <div className="max-w-2xl mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-white mb-8">
-          Create Trading Signal
-        </h1>
+        <h1 className="text-3xl font-bold text-white mb-8">Create Signal</h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Asset */}
@@ -133,40 +130,41 @@ export default function CreateSignal() {
             <select
               value={asset}
               onChange={(e) => setAsset(e.target.value)}
-              className="w-full bg-dark-800 border border-dark-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white"
               required
             >
               <option value="ETH">ETH</option>
             </select>
           </div>
 
-          {/* Target Price */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Target Price (USD)
-            </label>
-            <input
-              type="number"
-              value={targetPrice}
-              onChange={(e) => setTargetPrice(e.target.value)}
-              placeholder="e.g., 3500"
-              className="w-full bg-dark-800 border border-dark-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              required
-            />
-          </div>
+          {/* Target Price & Deadline */}
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Target Price (USD)
+              </label>
+              <input
+                type="number"
+                value={targetPrice}
+                onChange={(e) => setTargetPrice(e.target.value)}
+                placeholder="3500"
+                className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white"
+                required
+              />
+            </div>
 
-          {/* Deadline */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Deadline
-            </label>
-            <input
-              type="datetime-local"
-              value={deadline}
-              onChange={(e) => setDeadline(e.target.value)}
-              className="w-full bg-dark-800 border border-dark-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              required
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Deadline
+              </label>
+              <input
+                type="datetime-local"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+                className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white"
+                required
+              />
+            </div>
           </div>
 
           {/* Direction */}
@@ -178,24 +176,24 @@ export default function CreateSignal() {
               <button
                 type="button"
                 onClick={() => setDirection(0)}
-                className={`py-3 rounded-lg font-semibold transition-colors ${
+                className={`py-3 rounded-lg font-semibold ${
                   direction === 0
                     ? "bg-green-600 text-white"
-                    : "bg-dark-800 text-gray-400 hover:bg-dark-700"
+                    : "bg-gray-900 border border-gray-800 text-gray-400"
                 }`}
               >
-                📈 Bullish
+                Bullish
               </button>
               <button
                 type="button"
                 onClick={() => setDirection(1)}
-                className={`py-3 rounded-lg font-semibold transition-colors ${
+                className={`py-3 rounded-lg font-semibold ${
                   direction === 1
                     ? "bg-red-600 text-white"
-                    : "bg-dark-800 text-gray-400 hover:bg-dark-700"
+                    : "bg-gray-900 border border-gray-800 text-gray-400"
                 }`}
               >
-                📉 Bearish
+                Bearish
               </button>
             </div>
           </div>
@@ -210,12 +208,12 @@ export default function CreateSignal() {
               step="0.001"
               value={fee}
               onChange={(e) => setFee(e.target.value)}
-              placeholder="e.g., 0.05"
-              className="w-full bg-dark-800 border border-dark-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              placeholder="0.05"
+              className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white"
               required
             />
             <p className="text-sm text-gray-500 mt-1">
-              How much users pay to see your analysis
+              Users pay this to access your analysis
             </p>
           </div>
 
@@ -227,26 +225,27 @@ export default function CreateSignal() {
             <textarea
               value={analysis}
               onChange={(e) => setAnalysis(e.target.value)}
-              placeholder="Your detailed market analysis... (only visible to buyers)"
+              placeholder="Your detailed analysis..."
               rows={6}
-              className="w-full bg-dark-800 border border-dark-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+              className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white resize-none"
               required
             />
+            <p className="text-sm text-gray-500 mt-1">Only visible to buyers</p>
           </div>
 
-          {/* Info Box */}
-          <div className="bg-primary-500/10 border border-primary-500/30 rounded-lg p-4">
-            <p className="text-sm text-primary-300">
-              💡 <strong>Listing Fee:</strong> 0.001 ETH will be charged to
-              create this signal
+          {/* Info */}
+          <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+            <p className="text-sm text-gray-400">
+              Listing fee:{" "}
+              <span className="text-white font-semibold">0.001 ETH</span>
             </p>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <button
             type="submit"
             disabled={isPending || isConfirming}
-            className="w-full bg-primary-500 text-white py-4 rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full bg-white text-black py-3 rounded-lg font-semibold hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isPending && "Waiting for approval..."}
             {isConfirming && "Creating signal..."}
