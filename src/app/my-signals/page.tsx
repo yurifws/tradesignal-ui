@@ -1,6 +1,6 @@
 "use client";
 
-import { useAccount, useReadContract } from "wagmi";
+import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { formatEther } from "viem";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/config/contract";
 import Link from "next/link";
@@ -21,7 +21,7 @@ export default function MySignals() {
     functionName: "nextSignalId",
   });
 
-  if (!isConnected) {
+  if (!isConnected || !address) {
     return (
       <div className="min-h-screen bg-dark-900 flex items-center justify-center p-4">
         <div className="text-center max-w-md">
@@ -64,7 +64,7 @@ export default function MySignals() {
               Purchased
             </Link>
             <div className="text-sm text-gray-400">
-              {address?.slice(0, 6)}...{address?.slice(-4)}
+              {address.slice(0, 6)}...{address.slice(-4)}
             </div>
           </div>
         </div>
@@ -109,7 +109,7 @@ export default function MySignals() {
         ) : (
           <div className="grid md:grid-cols-3 gap-4">
             {Array.from({ length: totalCount }, (_, i) => (
-              <MySignalCard key={i} signalId={i} myAddress={address!} />
+              <MySignalCard key={i} signalId={i} myAddress={address} />
             ))}
           </div>
         )}
@@ -123,8 +123,10 @@ function MySignalCard({
   myAddress,
 }: {
   signalId: number;
-  myAddress: string;
+  myAddress: `0x${string}`;
 }) {
+  const { writeContract, isPending } = useWriteContract();
+
   const { data: signal } = useReadContract({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
@@ -132,7 +134,7 @@ function MySignalCard({
     args: [BigInt(signalId)],
   });
 
-  if (!signal || signal[0].toLowerCase() !== myAddress.toLowerCase())
+  if (!signal || String(signal[0]).toLowerCase() !== myAddress.toLowerCase())
     return null;
 
   const [
@@ -157,8 +159,26 @@ function MySignalCard({
         ? "bg-blue-600"
         : "bg-gray-600";
 
+  const isPastDeadline = Date.now() > Number(deadline) * 1000;
+  const canResolve = status === 0 && isPastDeadline;
+
+  const handleResolve = async () => {
+    try {
+      writeContract({
+        address: CONTRACT_ADDRESS,
+        abi: CONTRACT_ABI,
+        functionName: "resolveSignal",
+        args: [BigInt(signalId)],
+      });
+    } catch (error) {
+      console.error("Error resolving signal:", error);
+      alert("Error resolving signal");
+    }
+  };
+
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-gray-700 transition-colors">
+      {/* Header */}
       <div className="flex justify-between items-start mb-4">
         <div>
           <h3 className="text-lg font-bold text-white">{asset}</h3>
@@ -171,10 +191,17 @@ function MySignalCard({
         </span>
       </div>
 
+      {/* Info */}
       <div className="space-y-2 text-sm">
         <div className="flex justify-between">
           <span className="text-gray-400">Direction</span>
-          <span className={direction === 0 ? "text-green-500" : "text-red-500"}>
+          <span
+            className={
+              direction === 0
+                ? "text-green-500 font-semibold"
+                : "text-red-500 font-semibold"
+            }
+          >
             {direction === 0 ? "Bullish" : "Bearish"}
           </span>
         </div>
@@ -188,10 +215,14 @@ function MySignalCard({
         </div>
         <div className="flex justify-between">
           <span className="text-gray-400">Deadline</span>
-          <span className="text-white text-xs">
+          <span
+            className={`text-white text-xs ${isPastDeadline ? "text-yellow-500" : ""}`}
+          >
             {new Date(Number(deadline) * 1000).toLocaleDateString()}
           </span>
         </div>
+
+        {/* Result - só se resolvido */}
         {status === 1 && (
           <div className="flex justify-between pt-2 border-t border-gray-800">
             <span className="text-gray-400">Result</span>
@@ -202,11 +233,22 @@ function MySignalCard({
                   : "text-red-500 font-semibold"
               }
             >
-              {isCorrect ? "Correct" : "Incorrect"}
+              {isCorrect ? "✅ Correct" : "❌ Incorrect"}
             </span>
           </div>
         )}
       </div>
+
+      {/* Resolve Button */}
+      {canResolve && (
+        <button
+          onClick={handleResolve}
+          disabled={isPending}
+          className="w-full mt-4 bg-white text-black py-2 rounded-lg font-semibold hover:bg-gray-200 disabled:opacity-50 text-sm"
+        >
+          {isPending ? "Resolving..." : "Resolve Signal"}
+        </button>
+      )}
     </div>
   );
 }

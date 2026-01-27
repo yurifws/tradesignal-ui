@@ -10,6 +10,7 @@ Interface web moderna para interagir com o marketplace descentralizado de sinais
 ## 🎯 Sobre
 
 Interface web construída com Next.js que permite usuários:
+
 - 🔗 Conectar carteiras (MetaMask, WalletConnect, etc)
 - 📝 Criar sinais de trading com análises
 - 🛒 Comprar acesso a sinais de outros traders
@@ -38,7 +39,7 @@ Interface web construída com Next.js que permite usuários:
 
 ### Pré-requisitos
 
-- Node.js 18+ 
+- Node.js 18+
 - npm ou yarn
 - MetaMask ou outra wallet Web3
 
@@ -74,7 +75,7 @@ NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=seu_project_id_aqui
 Edite `src/config/contract.ts`:
 
 ```typescript
-export const CONTRACT_ADDRESS = '0xSeuEnderecoAqui' as const;
+export const CONTRACT_ADDRESS = "0xSeuEnderecoAqui" as const;
 ```
 
 ### 3. Configurar Chain
@@ -82,7 +83,7 @@ export const CONTRACT_ADDRESS = '0xSeuEnderecoAqui' as const;
 Edite `src/config/wagmi.ts` para mudar a rede:
 
 ```typescript
-import { sepolia, mainnet } from 'wagmi/chains';
+import { sepolia, mainnet } from "wagmi/chains";
 
 export const config = getDefaultConfig({
   chains: [sepolia], // ou [mainnet] para produção
@@ -99,7 +100,8 @@ tradesignal-ui/
 │   │   ├── page.tsx           # Home
 │   │   ├── create/            # Criar signal
 │   │   ├── browse/            # Ver signals
-│   │   ├── my-signals/        # Meus signals
+│   │   ├── my-signals/        # Meus signals criados
+│   │   ├── purchased/         # Signals comprados
 │   │   ├── layout.tsx         # Layout principal
 │   │   ├── providers.tsx      # Web3 providers
 │   │   └── globals.css        # Estilos globais
@@ -128,30 +130,49 @@ npm run lint     # Verifica erros de código
 ## 📱 Páginas
 
 ### Home (`/`)
-- Hero section com informações do projeto
+
+- Hero section minimalista
 - Botão de conexão de wallet
 - Cards de navegação (quando conectado)
-- Seção "Como Funciona"
+- Footer com estatísticas
 
 ### Criar Signal (`/create`)
+
 - Formulário para criar novo signal
 - Campos: Asset, Target Price, Deadline, Direction, Fee, Analysis
 - Validação de dados
 - Integração com MetaMask para transação
 
 ### Ver Signals (`/browse`)
+
 - Grid com todos os signals ativos
-- Filtros e busca (a implementar)
 - Cards com informações: Asset, Price, Trader, Fee
 - Botão de compra
 
 ### Meus Signals (`/my-signals`)
+
 - Dashboard pessoal
 - Estatísticas: Total, Corretos, Accuracy
-- Lista de signals criados
-- Lista de signals comprados (com análise desbloqueada)
+- Lista apenas de signals criados por você
+
+### Signals Comprados (`/purchased`)
+
+- Lista de signals que você comprou
+- Análise completa desbloqueada
+- Informações do trader
 
 ## 🎨 Personalização
+
+### Design Minimalista
+
+O projeto usa um design system minimalista e profissional:
+
+- **Fundo**: `#0a0e1a` (dark-900)
+- **Cards**: `#111827` (gray-900)
+- **Bordas**: `#1f2937` (gray-800)
+- **Destaque**: Verde (Bullish), Vermelho (Bearish)
+- **Botões primários**: Branco com texto preto
+- **Sem gradientes**: Design limpo e corporativo
 
 ### Cores
 
@@ -182,7 +203,7 @@ Edite `src/app/globals.css`:
 
 ```css
 body {
-  font-family: 'Sua Fonte Aqui', sans-serif;
+  font-family: "Sua Fonte Aqui", sans-serif;
 }
 ```
 
@@ -213,6 +234,7 @@ npm run build
 ### Outros
 
 O projeto é compatível com qualquer host que suporte Next.js:
+
 - AWS Amplify
 - Railway
 - Render
@@ -235,8 +257,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 ## 🔗 Links
 
 - **Smart Contract**: [tradesignal-contracts](https://github.com/seu-usuario/tradesignal-contracts)
-- **Sepolia Etherscan**: https://sepolia.etherscan.io/address/0x23ae9ee257069cCcDa0157e2941D5D8ba4394B47
-- **Demo**: https://tradesignal.vercel.app (se deployado)
+- **Sepolia Etherscan**: https://sepolia.etherscan.io/address/0x029BcD216154cD5B488548CC21CC766E01f80db4
 
 ## 📞 Suporte
 
@@ -244,4 +265,4 @@ Tem dúvidas? Abra uma [issue](https://github.com/seu-usuario/tradesignal-ui/iss
 
 ---
 
-**Desenvolvido com ❤️ como projeto final do Web3 Bootcamp**
+**Desenvolvido para projeto final do Web3 Bootcamp**

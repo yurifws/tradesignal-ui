@@ -1,5 +1,5 @@
 // Endereço do contrato deployado na Sepolia
-export const CONTRACT_ADDRESS = "0x23ae9ee257069cCcDa0157e2941D5D8ba4394B47";
+export const CONTRACT_ADDRESS = "0x029BcD216154cD5B488548CC21CC766E01f80db4";
 
 // ABI do contrato (interface)
 export const CONTRACT_ABI = [

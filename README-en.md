@@ -10,6 +10,7 @@ Modern web interface to interact with the Trade Signal decentralized trading sig
 ## 🎯 About
 
 Web interface built with Next.js that allows users to:
+
 - 🔗 Connect wallets (MetaMask, WalletConnect, etc)
 - 📝 Create trading signals with analysis
 - 🛒 Purchase access to other traders' signals
@@ -38,7 +39,7 @@ Web interface built with Next.js that allows users to:
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - MetaMask or another Web3 wallet
 
@@ -74,7 +75,7 @@ NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here
 Edit `src/config/contract.ts`:
 
 ```typescript
-export const CONTRACT_ADDRESS = '0xYourAddressHere' as const;
+export const CONTRACT_ADDRESS = "0xYourAddressHere" as const;
 ```
 
 ### 3. Configure Chain
@@ -82,7 +83,7 @@ export const CONTRACT_ADDRESS = '0xYourAddressHere' as const;
 Edit `src/config/wagmi.ts` to change network:
 
 ```typescript
-import { sepolia, mainnet } from 'wagmi/chains';
+import { sepolia, mainnet } from "wagmi/chains";
 
 export const config = getDefaultConfig({
   chains: [sepolia], // or [mainnet] for production
@@ -99,7 +100,8 @@ tradesignal-ui/
 │   │   ├── page.tsx           # Home
 │   │   ├── create/            # Create signal
 │   │   ├── browse/            # View signals
-│   │   ├── my-signals/        # My signals
+│   │   ├── my-signals/        # My created signals
+│   │   ├── purchased/         # Purchased signals
 │   │   ├── layout.tsx         # Main layout
 │   │   ├── providers.tsx      # Web3 providers
 │   │   └── globals.css        # Global styles
@@ -128,30 +130,49 @@ npm run lint     # Check code errors
 ## 📱 Pages
 
 ### Home (`/`)
-- Hero section with project information
+
+- Minimalist and professional design
 - Wallet connection button
 - Navigation cards (when connected)
-- "How It Works" section
+- Footer with protocol statistics
 
 ### Create Signal (`/create`)
-- Form to create new signal
+
+- Clean and objective form
 - Fields: Asset, Target Price, Deadline, Direction, Fee, Analysis
 - Data validation
 - MetaMask integration for transaction
 
 ### Browse Signals (`/browse`)
+
 - Grid with all active signals
-- Filters and search (to implement)
-- Cards with info: Asset, Price, Trader, Fee
-- Buy button
+- Minimalist cards with essential information
+- Integrated buy button
 
 ### My Signals (`/my-signals`)
-- Personal dashboard
-- Statistics: Total, Correct, Accuracy
-- List of created signals
-- List of purchased signals (with unlocked analysis)
+
+- Personal dashboard with statistics
+- Statistics: Total Created, Correct, Accuracy
+- List only signals you created
+
+### Purchased Signals (`/purchased`)
+
+- Dedicated page for purchased signals
+- Full unlocked analysis
+- Original trader information
 
 ## 🎨 Customization
+
+### Minimalist Design
+
+The project uses a minimalist and professional design system:
+
+- **Background**: `#0a0e1a` (dark-900)
+- **Cards**: `#111827` (gray-900)
+- **Borders**: `#1f2937` (gray-800)
+- **Highlights**: Green (Bullish), Red (Bearish)
+- **Primary buttons**: White with black text
+- **No gradients**: Clean and corporate design
 
 ### Colors
 
@@ -182,7 +203,7 @@ Edit `src/app/globals.css`:
 
 ```css
 body {
-  font-family: 'Your Font Here', sans-serif;
+  font-family: "Your Font Here", sans-serif;
 }
 ```
 
@@ -213,6 +234,7 @@ npm run build
 ### Others
 
 The project is compatible with any host that supports Next.js:
+
 - AWS Amplify
 - Railway
 - Render
@@ -235,8 +257,7 @@ This project is under the MIT license. See the [LICENSE](LICENSE) file for more 
 ## 🔗 Links
 
 - **Smart Contract**: [tradesignal-contracts](https://github.com/your-username/tradesignal-contracts)
-- **Sepolia Etherscan**: https://sepolia.etherscan.io/address/0x23ae9ee257069cCcDa0157e2941D5D8ba4394B47
-- **Demo**: https://tradesignal.vercel.app (if deployed)
+- **Sepolia Etherscan**: https://sepolia.etherscan.io/address/0x029BcD216154cD5B488548CC21CC766E01f80db4
 
 ## 📞 Support
 
@@ -244,4 +265,4 @@ Have questions? Open an [issue](https://github.com/your-username/tradesignal-ui/
 
 ---
 
-**Developed with ❤️ as a Web3 Bootcamp final project**
+**Developed to Web3 Bootcamp final project**

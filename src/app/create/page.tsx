@@ -176,10 +176,10 @@ export default function CreateSignal() {
               <button
                 type="button"
                 onClick={() => setDirection(0)}
-                className={`py-3 rounded-lg font-semibold ${
+                className={`py-3 rounded-lg font-semibold transition-all ${
                   direction === 0
                     ? "bg-green-600 text-white"
-                    : "bg-gray-900 border border-gray-800 text-gray-400"
+                    : "bg-gray-900 border border-gray-800 text-gray-400 hover:border-gray-700"
                 }`}
               >
                 Bullish
@@ -187,10 +187,10 @@ export default function CreateSignal() {
               <button
                 type="button"
                 onClick={() => setDirection(1)}
-                className={`py-3 rounded-lg font-semibold ${
+                className={`py-3 rounded-lg font-semibold transition-all ${
                   direction === 1
                     ? "bg-red-600 text-white"
-                    : "bg-gray-900 border border-gray-800 text-gray-400"
+                    : "bg-gray-900 border border-gray-800 text-gray-400 hover:border-gray-700"
                 }`}
               >
                 Bearish
